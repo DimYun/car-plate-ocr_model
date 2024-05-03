@@ -1,3 +1,4 @@
+"""Module for load configuration from yaml file."""
 from typing import List
 
 from omegaconf import OmegaConf
@@ -5,6 +6,7 @@ from pydantic import BaseModel
 
 
 class LossConfig(BaseModel):
+    """Config for losses"""
     name: str
     weight: float
     loss_fn: str
@@ -12,6 +14,7 @@ class LossConfig(BaseModel):
 
 
 class DataConfig(BaseModel):
+    """Config for data"""
     batch_size: int
     num_iterations: int
     n_workers: int
@@ -22,6 +25,7 @@ class DataConfig(BaseModel):
 
 
 class Config(BaseModel):
+    """Config for model"""
     project_name: str
     experiment_name: str
     data_config: DataConfig
@@ -39,6 +43,11 @@ class Config(BaseModel):
     losses: List[LossConfig]
 
     @classmethod
-    def from_yaml(cls, path: str) -> 'Config':
+    def from_yaml(cls, path: str) -> "Config":
+        """
+        Load config from yaml file
+        :param path: path to yaml file
+        :return: Config instance
+        """
         cfg = OmegaConf.to_container(OmegaConf.load(path), resolve=True)
         return cls(**cfg)

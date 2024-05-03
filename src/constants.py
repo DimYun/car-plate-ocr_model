@@ -1,13 +1,12 @@
+"""Module containing constants if needed"""
 import os
 from itertools import chain
 
-PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../'))
-
-EXPERIMENTS_PATH = os.path.join(PROJECT_PATH, 'experiments')
-
-DATA_PATH = os.environ.get('DATA_PATH')
-
-
+PROJECT_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(os.path.realpath(__file__)), "../")
+)
+EXPERIMENTS_PATH = os.path.join(PROJECT_PATH, "experiments")
+DATA_PATH = os.environ.get("DATA_PATH")
 BY_SYMBOLS = ["A", "B", "C", "E", "H", "I", "K", "M", "O", "P", "T", "X"]
 RUS_SYMBOLS = ["A", "B", "E", "K", "M", "H", "O", "P", "C", "T", "Y", "X"]
 UZ_SYMBOLS = [
@@ -625,15 +624,13 @@ used_regions_letters = [
 ]
 ALL_SYMBOLS = list(set(chain(*used_regions_letters)))
 ALL_SYMBOLS = [symbol.upper() for symbol in ALL_SYMBOLS]
-ALL_SYMBOLS = sorted(ALL_SYMBOLS)
-# ALL_SYMBOLS = [PADDING_SYMBOL] + ALL_SYMBOLS
+ALL_SYMBOLS = sorted(ALL_SYMBOLS)  # ALL_SYMBOLS = [PADDING_SYMBOL] + ALL_SYMBOLS
 print(ALL_SYMBOLS)
-print(''.join(ALL_SYMBOLS))
+print("".join(ALL_SYMBOLS), len(ALL_SYMBOLS))
 
 
 class REGIONS:
     """Enumeration of recognized regions."""
-
     rus = 0
     by = 1
     am = 2
