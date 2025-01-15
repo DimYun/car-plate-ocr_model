@@ -13,6 +13,7 @@ from src.utils import load_object
 
 class OCRModule(pl.LightningModule):
     """Lightning module for model construction."""
+
     def __init__(self, config: Config):
         super().__init__()
         self._config = config
@@ -28,16 +29,16 @@ class OCRModule(pl.LightningModule):
         self.save_hyperparameters()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Call model prediction
+        """Call model prediction.
+
         :param x: tensor to predict
         :return: predicted values
         """
         return self._model(x)
 
     def configure_optimizers(self) -> dict:
-        """
-        Configure optimizers and shedulled for model
+        """Configure optimizers and scheduled for model.
+
         :return: dictionary with constructed parameters
         """
         optimizer = load_object(self._config.optimizer)(
@@ -59,8 +60,8 @@ class OCRModule(pl.LightningModule):
         }
 
     def training_step(self, batch: List[torch.Tensor], batch_idx: int) -> torch.Tensor:
-        """
-        Train step
+        """Train step.
+
         :param batch: tensor with input data
         :param batch_idx: index of the batch
         :return: loss value
@@ -81,9 +82,9 @@ class OCRModule(pl.LightningModule):
         return loss_value
 
     def validation_step(self, batch: List[torch.Tensor], batch_idx: int) -> None:
-        """
-        Validation step
-        :param batch: batch for tredict
+        """Validation step.
+
+        :param batch: batch for predict
         :param batch_idx: index of batch
         :return:
         """
@@ -102,30 +103,30 @@ class OCRModule(pl.LightningModule):
         self._valid_metrics(log_probs, targets)
 
     def on_train_epoch_start(self) -> None:
-        """
-        On training start, reset metrics
-        :return:
+        """On training start, reset metrics.
+
+        :return: None
         """
         self._train_metrics.reset()
 
     def on_train_epoch_end(self) -> None:
-        """
-        On training end, compute and log metrics
-        :return:
+        """On training end, compute and log metrics.
+
+        :return: None
         """
         self.log_dict(self._train_metrics.compute(), on_epoch=True)
 
     def on_validation_epoch_start(self) -> None:
-        """
-        On validation start, reset metrics
-        :return:
+        """On validation start, reset metrics.
+
+        :return: None
         """
         self._valid_metrics.reset()
 
     def on_validation_epoch_end(self) -> None:
-        """
-        On validation end, compute and log metrics
-        :return:
+        """On validation end, compute and log metrics.
+
+        :return: None
         """
         self.log_dict(self._valid_metrics.compute(), on_epoch=True)
 
@@ -137,8 +138,8 @@ class OCRModule(pl.LightningModule):
         target_lengths: torch.Tensor,
         prefix: str,
     ) -> torch.Tensor:
-        """
-        Calculate complicated loss for ORC
+        """Calculate complicated loss for ORC.
+
         :param log_probs: logits of prediction
         :param targets: real values of targets
         :param input_lengths: lengths of input

@@ -4,8 +4,9 @@ from timm import create_model
 
 
 class CRNN(torch.nn.Module):
-    """Реализует CRNN модель для OCR задачи.
-    CNN-backbone берется из timm, в RNN части стоит GRU.
+    """CRNN model for OCR task.
+
+    CNN-backbone from timm, in RNN part used GRU.
     """
 
     def __init__(
@@ -22,8 +23,8 @@ class CRNN(torch.nn.Module):
     ) -> None:
         super().__init__()
 
-        # Предобученный бекбон для фичей.
-        # Можно обрезать, не обязательно использовать всю глубину.
+        # Pretrained backbone for features.
+        # Can be cut, don't necessary use whole depth.
         self.backbone = create_model(
             backbone_name,
             pretrained=pretrained,
@@ -35,7 +36,7 @@ class CRNN(torch.nn.Module):
             cnn_output_size, rnn_features_num, kernel_size=1, bias=False
         )
 
-        # Рекуррентная часть.
+        # Recurrent part.
         self.rnn = torch.nn.GRU(
             input_size=384,  # 576,
             hidden_size=rnn_hidden_size,
@@ -48,13 +49,13 @@ class CRNN(torch.nn.Module):
         if rnn_bidirectional:
             classifier_in_features = 2 * rnn_hidden_size
 
-        # Классификатор.
+        # Classificator.
         self.fc = torch.nn.Linear(classifier_in_features, num_classes)
         self.softmax = torch.nn.LogSoftmax(dim=2)
 
     def forward(self, tensor: torch.Tensor) -> torch.Tensor:
-        """
-        Function for make prediction with model
+        """Function for make prediction with model.
+
         :param tensor: input tensor to predict
         :return: predicted values
         """
