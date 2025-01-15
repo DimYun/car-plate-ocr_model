@@ -1,69 +1,52 @@
-## Обучение OCR
+## Car plates project. OCR model (part 2/3)
 
-### Данные
-
-Датасет состоит из кропов номеров машин (ГРЗ) 27 стран + двурядные номера. 
-Описательный анализ данных и подбор входного размера изображения и бэкбона 
-для CRNN приведены в [EDA.ipynb](notebooks/EDA.ipynb).
-
-
+This is the project for car plate OCR recognition, which include:
+1. [Neural network segmentation model for car plate area with number selection (part 1/3)](https://github.com/DimYun/car-plate-segm_model)
+2. Neural network OCR model for plate character recognition (part 2/3)
+3. [API service for these two models (part 3/3)](https://github.com/DimYun/car-plate_service)
+4. [Additional example how to use API service in Telegram bot](https://github.com/DimYun/car-plate_tg-bot)
 
 
+### Dataset
 
-### Подготовка данных и модели
-Перед тем как запускать обучение, необходимо подобрать входной размер 
-изображения и бекбон для CRNN.
-Для этого смотри [эту](notebooks/подбор параметров.ipynb) тетрадку.
+Dataset include car plate crops from 27 countries, about 2 000 000 images (include two line numbers) in `.jpg`.
+Some data are bad and invalid. For more information about data and backbone selection for CRNN please see [EDA.ipynb](notebooks/EDA.ipynb).
 
+To download data:
 
-### Особенности
-
-Выделим несколько особенностей, на которые стоит обратить внимание.
-
-##### Датасет
-Сейчас вырезание кропов из изображения происходит в `__init__` и сохраняется в список.
-Это допустимо для небольшого объёма данных.
-Когда добавишь ещё и свои данные, инициализация будет занимать довольно длительное время.
-Чтобы этого избежать, можешь нарезать кропы штрих-кодов заранее и немного поправить датасет.
-
-##### Модель
-Если собираешься использовать входные размеры изображения, отличные от  
-установленных, то нужно будет править модель CRNN.
-Разберись как формируются размерности и подставь нужные значения.
+```shell
+make download_dataset
+```
 
 
-##### Метрики
-Сейчас мы считаем 2 метрики:
- - StringMatchMetric (полное соответствие строк) - можно сказать, что это accuracy для строк
- - EditDistanceMetric (расстояние между строками) - какое количетсво операций нужно сделать, чтобы из одной строки получить другую.
+### Environment setup
 
-Подумай, какую метрику предпочтительнее оптимизировать в данной задаче и почему.
+1. Create and activate python venv
+    ```shell
+    python3 -m venv venv
+    . venv/bin/activate
+    ```
 
-### Запуск обучения
+2. Install libraries
+   ```shell
+    make install
+   ```
+   
+3. Run linters
+   ```shell
+   make lint
+   ``` 
 
-``` DATA_PATH=/your/data/folder/bar_codes python train.py configs/config.yaml```
+4. Tune [config.yaml](configs/config.yaml) and select input size of image and backbone for CRNN, see [EDA notebook](notebooks/EDA.ipynb)
 
-### Анализ результатов
-Смотреть на графики - это, конечно, хорошо. Но куда приятнее смотреть на то, как модель предсказывает строку по изображению.
-Для анализа работы модели смотри [эту](notebooks/анализ результатов.ipynb) тетрадку.
-
-### Задание
-Чтобы выполнить задание, нужно выбить метрики StringMatchMetric больше 0.6 
-или EditDistanceMetric меньше 1.
-
-Какие эксперименты можно ещё провести:
-1. Увеличить количество данных
-2. Подобрать и добавить аугментации
-3. Поэкспериментировать с моделью: другой бекбон, увеличить/уменьшить 
-   рекурентную часть и др.
+5. Train
+   ```shell
+   make train
+   ```
 
 
-### Вопросы
+### Additional information
 
-1. Не совсем понятно назначение и связь с исходными данными настроек:   rnn_features_num: 48
-  rnn_hidden_size: 64
-2. Зачем повторяется num_classes в теле конфига
-3. Как правильно регулировать размер входных фич, сейчас поправил nn.GRU(
-            input_size=384,  #576,), но кажется это уменьшает 
-   предсказательную способность? 
-4. Как добавить классификацию региона номера?
+* Inference example in [notebook](notebooks/inference_onnx_convert.ipynb)
+* [Best experiment in ClearML](https://app.clear.ml/projects/cb019a605a934ca1a4d85897c43bec3b/experiments/3b62d34fc96049ee9f82db6c858be152/output/execution)
+* [History of experiments](HISTORY.md)

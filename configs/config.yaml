@@ -1,0 +1,44 @@
+project_name: 'OCR-plates'
+experiment_name: 'exp1'
+num_classes: 24
+n_epochs: 100
+accelerator: 'gpu'
+device: 0
+monitor_metric: 'valid_ctc_loss'
+monitor_mode: 'min'
+
+model_kwargs:
+  backbone_name: 'resnet18'
+  pretrained: true
+  rnn_features_num: 48
+  rnn_hidden_size: 64
+  rnn_dropout: 0.1
+  rnn_bidirectional: true
+  num_classes: 60
+
+optimizer: 'torch.optim.AdamW'
+optimizer_kwargs:
+  lr: 1e-3
+  weight_decay: 1e-5
+
+scheduler: 'torch.optim.lr_scheduler.ReduceLROnPlateau'
+scheduler_kwargs:
+  mode: 'min'
+  factor: 0.5
+  patience: 20
+  min_lr: 1e-5
+
+losses:
+  - name: 'ctc'
+    weight: 1.0
+    loss_fn: 'torch.nn.CTCLoss'
+    loss_kwargs: {}
+
+data_config:
+  batch_size: 256
+  num_iterations: 100
+  n_workers: 10
+  width: 416
+  height: 64
+  vocab: '#&0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÄÅÖÜĆČĐŠŽАБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЭЮЯ'
+  text_size: 10
