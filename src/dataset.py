@@ -103,16 +103,14 @@ def prepare_and_read_annotations(
         annot_filenames = list(filter(lambda x: x.endswith("_ref"), annot_filenames))
         annot_filenames.sort()
         counter = 1
-        for (
-            a_file
-        ) in annot_filenames:  # tqdm(annot_filenames, position=0, desc='Annot. File'):
+        for a_file in annot_filenames:
             print(f"Parse file {a_file}, {counter} / {len(annot_filenames)}")
             counter += 1
             region = (
                 a_file.replace("meta_", "").replace("_ref", "").replace("_test", "")
             )
             with open(
-                    os.path.join(annot_path, f"{a_file}"),
+                    os.path.join(annot_path, a_file),
                     "r",
                     encoding='utf-8',
             ) as a_fin:

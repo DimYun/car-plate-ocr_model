@@ -87,8 +87,7 @@ def get_transforms(
 
 class PadResizeOCR:
     """
-    Приводит к нужному размеру с сохранением отношения сторон,
-    если нужно добавляет падинги.
+    Lead to selected sizes with constant aspec ration, and add paddings if needed.
     """
     def __init__(
             self,
@@ -139,7 +138,7 @@ class PadResizeOCR:
 
 class TextEncode:
     """
-    Кодирует исходный текст.
+    Encode text.
     """
 
     symbols_non_latin = (
@@ -164,7 +163,7 @@ class TextEncode:
         source_text = source_text.upper().translate(self.tr_non_latin)
 
         postprocessed_text = [
-            self.vocab.index(_) + 1 for _ in source_text if _ in self.vocab
+            self.vocab.index(c) + 1 for c in source_text if c in self.vocab
         ]
         postprocessed_text = np.pad(
             postprocessed_text,
@@ -180,7 +179,7 @@ class TextEncode:
 
 class CropPerspective:
     """
-    Selfwrited class for augmentations for geometric tranformation
+    Selfwrited class for augmentations for geometric transformation
     """
 
     def __init__(
