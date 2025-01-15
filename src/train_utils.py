@@ -1,11 +1,11 @@
-"""Module containing utility"""
+"""Module containing utility."""
 import importlib
 import typing as tp
 
 
 def load_object(obj_path: str, default_obj_path: str = "") -> tp.Any:
-    """
-    Load an object from config
+    """Load an object from config.
+
     :param obj_path: path to python module for upload
     :param default_obj_path: paramaters for upload
     :return: loaded object

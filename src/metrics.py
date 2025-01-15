@@ -1,4 +1,4 @@
-"""Module containing metrics"""
+"""Module containing metrics."""
 
 import itertools
 
@@ -9,8 +9,8 @@ from torchmetrics import Metric, MetricCollection
 
 
 def get_metrics() -> MetricCollection:
-    """
-    Returns a list of metrics
+    """Returns a list of metrics.
+
     :return: torchmetrics.MetricCollection
     """
     return MetricCollection(
@@ -22,9 +22,7 @@ def get_metrics() -> MetricCollection:
 
 
 class StringMatchMetric(Metric):
-    """
-    Computes the string matches between two tensors
-    """
+    """Computes the string matches between two tensors."""
 
     def __init__(self):
         super().__init__()
@@ -42,11 +40,11 @@ class StringMatchMetric(Metric):
         )
 
     def update(self, preds: torch.Tensor, target: torch.Tensor) -> None:
-        """
-        Calculate metric
+        """Calculate metric.
+
         :param preds: predicted value
         :param target: true value
-        :return:
+        :return: None
         """
         batch_size = torch.tensor(target.shape[0])
         metric = torch.tensor(string_match(preds, target))
@@ -54,17 +52,16 @@ class StringMatchMetric(Metric):
         self.total += batch_size
 
     def compute(self) -> torch.Tensor:
-        """
-        Compute the metric
-        :return:
+        """Compute the metric.
+
+        :return: torch.Tensor
         """
         return self.correct / self.total
 
 
 class EditDistanceMetric(Metric):
-    """
-    Computes the edit distance metric
-    """
+    """Computes the edit distance metric."""
+
     def __init__(self):
         super().__init__()
         self.correct = 0
@@ -81,11 +78,11 @@ class EditDistanceMetric(Metric):
         )
 
     def update(self, preds: torch.Tensor, target: torch.Tensor) -> None:
-        """
-        Update metric value
+        """Update metric value.
+
         :param preds: predicted values
         :param target: true values
-        :return:
+        :return: None
         """
         batch_size = torch.tensor(target.shape[0])
         metric = torch.tensor(edit_distance(preds, target))
@@ -93,16 +90,16 @@ class EditDistanceMetric(Metric):
         self.total += batch_size
 
     def compute(self) -> torch.Tensor:
-        """
-        Computes the edit distance metric
-        :return: edit distance
+        """Computes the edit distance metric.
+
+        :return: edit distance torch.Tensor
         """
         return self.correct / self.total
 
 
 def string_match(pred_data: torch.Tensor, true_data: torch.Tensor) -> float:
-    """
-    Calculates precision of pedicted word
+    """Calculates precision of pedicted word.
+
     :param pred_data: tensor with predicted values
     :param true_data: tesnory with true values
     :return: precision float value
@@ -123,8 +120,8 @@ def string_match(pred_data: torch.Tensor, true_data: torch.Tensor) -> float:
 
 
 def edit_distance(pred_data: torch.Tensor, true_data: torch.Tensor) -> float:
-    """
-    Compute the edit distance between true and predicted values
+    """Compute the edit distance between true and predicted values.
+
     :param pred_data: predicted tensor of word
     :param true_data: true tensor of word
     :return: edit distance

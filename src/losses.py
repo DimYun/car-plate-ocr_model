@@ -10,15 +10,16 @@ from src.utils import load_object
 
 @dataclass
 class Loss:
-    """Loss class"""
+    """Loss class."""
+
     name: str
     weight: float
     loss: nn.Module
 
 
 def get_losses(losses_cfg: tp.List[LossConfig]) -> tp.List[Loss]:
-    """
-    Get a list of losses from config file
+    """Get a list of losses from config file.
+
     :param losses_cfg: losses from config file
     :return:
     """

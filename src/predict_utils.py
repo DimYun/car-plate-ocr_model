@@ -10,8 +10,8 @@ import torch
 def matrix_to_string(
     model_output: torch.Tensor, vocab: str
 ) -> Tuple[List[str], List[np.ndarray]]:
-    """
-    Декодирует ctc-матрицу в строку
+    """Decode ctc-matrix into string.
+
     :param model_output: tensor with model output
     :param vocab: alloved sharacters in vocabular
     :return: prepared string and decoded confidential levels
@@ -23,10 +23,10 @@ def matrix_to_string(
 
 
 def postprocess(model_output: torch.Tensor) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Postprocess model output
+    """Postprocess model output.
+
     :param model_output: tensor with model output
-    :return: labels and confidentional values
+    :return: labels and confidential values
     """
     output = model_output.permute(1, 0, 2)
     output = torch.nn.Softmax(dim=2)(output)
@@ -37,11 +37,11 @@ def postprocess(model_output: torch.Tensor) -> Tuple[np.ndarray, np.ndarray]:
 
 
 def decode(
-        labels_raw: np.ndarray,
-        conf_raw: np.ndarray
+    labels_raw: np.ndarray,
+    conf_raw: np.ndarray
 ) -> Tuple[List[List[int]], List[np.ndarray]]:
-    """
-    Decodet labels and confidentional levels
+    """Decode labels and confidential levels.
+
     :param labels_raw: rav labels from model prediction
     :param conf_raw: raw confidential values from model prediction
     :return: labels and confidentional values
@@ -52,7 +52,7 @@ def decode(
         result_one_labels = []
         result_one_confidences = []
         for l_group, group in itertools.groupby(
-                zip(label, conf), operator.itemgetter(0)
+            zip(label, conf), operator.itemgetter(0)
         ):
             if l_group > 0:
                 result_one_labels.append(l_group)
@@ -63,8 +63,8 @@ def decode(
 
 
 def labels_to_strings(labels: List[List[int]], vocab: str) -> List[str]:
-    """
-    Convert labels to string
+    """Convert labels to string.
+
     :param labels: predicted and processed labels
     :param vocab: alloved characters
     :return: predicted and processed list with strings

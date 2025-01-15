@@ -1,4 +1,4 @@
-"""Module containing constants if needed"""
+"""Module containing constants if needed."""
 import os
 from itertools import chain
 
@@ -625,12 +625,11 @@ used_regions_letters = [
 ALL_SYMBOLS = list(set(chain(*used_regions_letters)))
 ALL_SYMBOLS = [symbol.upper() for symbol in ALL_SYMBOLS]
 ALL_SYMBOLS = sorted(ALL_SYMBOLS)  # ALL_SYMBOLS = [PADDING_SYMBOL] + ALL_SYMBOLS
-# print(ALL_SYMBOLS)
-# print("".join(ALL_SYMBOLS), len(ALL_SYMBOLS))
 
 
 class Regions:
     """Enumeration of recognized regions."""
+
     rus = 0
     by = 1
     am = 2

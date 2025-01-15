@@ -18,8 +18,8 @@ from src.lightning_module import OCRModule
 
 
 def arg_parse() -> Any:
-    """
-    Parse command line
+    """Parse command line.
+
     :return: dictionary like structure
     """
     parser = argparse.ArgumentParser()
@@ -28,8 +28,8 @@ def arg_parse() -> Any:
 
 
 def train(config: Config):
-    """
-    Main function to strart the training
+    """Main function to start the training.
+
     :param config: python config module
     :return:
     """

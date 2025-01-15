@@ -1,4 +1,4 @@
-"""Lightning module for create dataset"""
+"""Lightning module for create dataset."""
 import os
 from typing import Optional, Tuple, Union
 
@@ -12,7 +12,8 @@ TRANSFORM_TYPE = Union[albu.BasicTransform, albu.BaseCompose]
 
 
 class PlatesCodeDataset(Dataset):
-    """Plates dataset module"""
+    """Plates dataset module."""
+
     def __init__(
         self,
         data_folder: str,
@@ -31,8 +32,8 @@ class PlatesCodeDataset(Dataset):
         self.regions = regions
 
     def __getitem__(self, idx: int) -> Tuple:
-        """
-        Function for getting a single data point
+        """Function for getting a single data point.
+
         :param idx: index of data point
         :return: tuple with image, test, text length and region
         """
@@ -56,18 +57,20 @@ class PlatesCodeDataset(Dataset):
         return prep_data["image"], prep_data["text"], prep_data["text_length"], region
 
     def __len__(self) -> int:
-        """
-        Function for getting the length of the dataset
+        """Function for getting the length of the dataset.
+
         :return: length of dataset
         """
         return self.image_paths.shape[0]
 
 
 def prepare_and_read_annotations(
-    data_folder: str, phase: str = "train", reset_flag: bool = False
+    data_folder: str,
+    phase: str = "train",
+    reset_flag: bool = False,
 ) -> Tuple:
-    """
-    Get data from disk and prepare it for dataset
+    """Get data from disk and prepare it for dataset.
+
     :param data_folder: string with path to dataset
     :param phase: string with type of dataset to load
     :param reset_flag: flag for read prepared data
@@ -77,22 +80,19 @@ def prepare_and_read_annotations(
     plate_numbers = []
     regions = []
     full_image_path = os.path.join(data_folder, f"{phase}_image_paths.npy")
-    if (
-        os.path.isfile(full_image_path)
-        and not reset_flag
-    ):
-        with open(full_image_path, "rb") as f:
-            image_paths = np.load(f)
-        with open(os.path.join(data_folder, f"{phase}_plate_numbers.npy"), "rb") as f:
-            plate_numbers = np.load(f)
-        with open(os.path.join(data_folder, f"{phase}_regions.npy"), "rb") as f:
-            regions = np.load(f)
+    if os.path.isfile(full_image_path) and not reset_flag:
+        with open(full_image_path, "rb") as im_file:
+            image_paths = np.load(im_file)
+        with open(os.path.join(data_folder, f"{phase}_plate_numbers.npy"), "rb") as plate_num_file:
+            plate_numbers = np.load(plate_num_file)
+        with open(os.path.join(data_folder, f"{phase}_regions.npy"), "rb") as region_file:
+            regions = np.load(region_file)
     else:
         noisy_data = []
         with open(
-                os.path.join(data_folder, f"{phase}_noisy_data.txt"),
-                'r',
-                encoding="utf-8"
+            os.path.join(data_folder, f"{phase}_noisy_data.txt"),
+            'r',
+            encoding="utf-8"
         ) as fin:
             for line in fin:
                 line = line.strip()
@@ -110,12 +110,12 @@ def prepare_and_read_annotations(
                 a_file.replace("meta_", "").replace("_ref", "").replace("_test", "")
             )
             with open(
-                    os.path.join(annot_path, a_file),
-                    "r",
-                    encoding='utf-8',
+                os.path.join(annot_path, a_file),
+                "r",
+                encoding='utf-8',
             ) as a_fin:
-                for line in tqdm(a_fin.readlines(), position=0, desc="Images"):
-                    image_filename, plate_number = line.strip().split("\t")
+                for txt_line in tqdm(a_fin.readlines(), position=0, desc="Images"):
+                    image_filename, plate_number = txt_line.strip().split("\t")
                     image_path = os.path.join(
                         data_folder, "dataset-plates", region, phase, image_filename
                     )
@@ -125,40 +125,37 @@ def prepare_and_read_annotations(
                         print(f"Error: {err}, {image_filename}")
                         noisy_data.append(image_filename)
                         continue
-                    if (
-                            image_filename
-                            not in noisy_data
-                    ):  # data has images with low resolution and irrelevant text
+                    if image_filename not in noisy_data:  # data has images with low resolution and irrelevant text
                         image_paths.append(image_filename)
                         plate_numbers.append(plate_number)
                         regions.append(region)
                     else:
                         noisy_data.append(image_filename)
             with open(
-                    os.path.join(data_folder, f"{phase}_noisy_data.txt"),
-                    "w",
-                    encoding="utf-8"
+                os.path.join(data_folder, f"{phase}_noisy_data.txt"),
+                "w",
+                encoding="utf-8"
             ) as f:
                 f.write("\n".join(noisy_data))
         with open(
-                os.path.join(data_folder, f"{phase}_image_paths.npy"),
-                "wb",
-                encoding="utf-8",
-        ) as f:
+            os.path.join(data_folder, f"{phase}_image_paths.npy"),
+            "wb",
+            encoding="utf-8",
+        ) as img_file:
             image_paths = np.array(image_paths)
-            np.save(f, image_paths)
+            np.save(img_file, image_paths)
         with open(
-                os.path.join(data_folder, f"{phase}_plate_numbers.npy"),
-                "wb",
-                encoding="utf-8",
-        ) as f:
+            os.path.join(data_folder, f"{phase}_plate_numbers.npy"),
+            "wb",
+            encoding="utf-8",
+        ) as plate_file:
             plate_numbers = np.array(plate_numbers)
-            np.save(f, plate_numbers)
+            np.save(plate_file, plate_numbers)
         with open(
-                os.path.join(data_folder, f"{phase}_regions.npy"),
-                "wb",
-                encoding="utf-8",
-        ) as f:
+            os.path.join(data_folder, f"{phase}_regions.npy"),
+            "wb",
+            encoding="utf-8",
+        ) as reg_file:
             regions = np.array(regions)
-            np.save(f, regions)
+            np.save(reg_file, regions)
     return image_paths, plate_numbers, regions

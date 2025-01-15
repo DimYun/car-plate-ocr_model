@@ -11,7 +11,8 @@ from src.transforms import get_transforms
 
 
 class OCRDM(LightningDataModule):
-    """Lightning module for data preprocessing"""
+    """Lightning module for data preprocessing."""
+
     def __init__(self, config: DataConfig):
         super().__init__()
         self._config = config
@@ -33,10 +34,10 @@ class OCRDM(LightningDataModule):
         self.train_sampler: Optional[RandomSampler] = None
 
     def setup(self, stage: Optional[str] = None):
-        """
-        Set up the data
+        """Set up the data.
+
         :param stage: name of training stage
-        :return:
+        :return: None
         """
         self.train_dataset = PlatesCodeDataset(
             phase="train",
@@ -57,8 +58,8 @@ class OCRDM(LightningDataModule):
             )
 
     def train_dataloader(self) -> DataLoader:
-        """
-        Load the training dataloader
+        """Load the training dataloader.
+
         :return: torch.utils.data.DataLoader
         """
         return DataLoader(
@@ -70,8 +71,8 @@ class OCRDM(LightningDataModule):
         )
 
     def val_dataloader(self) -> DataLoader:
-        """
-        Load the validation dataloader
+        """Load the validation dataloader.
+
         :return: torch.utils.data.DataLoader
         """
         return DataLoader(

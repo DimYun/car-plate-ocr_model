@@ -21,12 +21,12 @@ def get_transforms(
     augmentations: bool = True,
     postprocessing: bool = True,
 ) -> TRANSFORM_TYPE:
-    """
-    Process data in Dataset module for model training and validation
+    """Process data in Dataset module for model training and validation.
+
     :param width: width of image to NN
     :param height: height of image to NN
     :param text_size: maximum number of characters in plate
-    :param vocab: alloved characters
+    :param vocab: allowed characters
     :param preprocessing: prepare raw image for NN
     :param augmentations: add augmentation of image for NN
     :param postprocessing: prepare image for NN
@@ -86,15 +86,14 @@ def get_transforms(
 
 
 class PadResizeOCR:
-    """
-    Lead to selected sizes with constant aspec ration, and add paddings if needed.
-    """
+    """Lead to selected sizes with constant aspec ration, and add paddings if needed."""
+
     def __init__(
-            self,
-            target_width,
-            target_height,
-            pad_value: int = 0,
-            mode: str = "random"
+        self,
+        target_width,
+        target_height,
+        pad_value: int = 0,
+        mode: str = "random"
     ):
         self.target_width = target_width
         self.target_height = target_height
@@ -104,8 +103,8 @@ class PadResizeOCR:
         assert self.mode in {"random", "left", "center"}
 
     def __call__(self, force_apply=False, **kwargs) -> Dict[str, np.ndarray]:
-        """
-        Call function for PadResizeOCR class
+        """Call function for PadResizeOCR class.
+
         :param force_apply: flag to force applying
         :param kwargs: keyword arguments
         :return: dictionary with transformed data
@@ -137,9 +136,7 @@ class PadResizeOCR:
 
 
 class TextEncode:
-    """
-    Encode text.
-    """
+    """Encode text."""
 
     symbols_non_latin = (
         "АВ5СЕКХНМОРТУ0123456789ӨҮՈ",
@@ -153,8 +150,8 @@ class TextEncode:
         self.target_text_size = target_text_size
 
     def __call__(self, force_apply=False, **kwargs) -> Dict[str, np.ndarray]:
-        """
-        Call function for Text Encoding
+        """Call function for Text Encoding.
+
         :param force_apply: flag to force apply
         :param kwargs: keyword arguments
         :return: dictionary with transformed data
@@ -178,23 +175,21 @@ class TextEncode:
 
 
 class CropPerspective:
-    """
-    Selfwrited class for augmentations for geometric transformation
-    """
+    """Selfwrited class for augmentations for geometric transformation."""
 
     def __init__(
-            self,
-            p_value: float = 0.5,
-            width_ratio: float = 0.04,
-            height_ratio: float = 0.08
+        self,
+        p_value: float = 0.5,
+        width_ratio: float = 0.04,
+        height_ratio: float = 0.08
     ):
         self.p_value = p_value
         self.width_ratio = width_ratio
         self.height_ratio = height_ratio
 
     def __call__(self, force_apply=False, **kwargs) -> Dict[str, np.ndarray]:
-        """
-        Call function for CropPerspective transformation
+        """Call function for CropPerspective transformation.
+
         :param force_apply: flag to force applying
         :param kwargs: keyword arguments
         :return: dictionary with transformed data
@@ -232,22 +227,21 @@ class CropPerspective:
 
 
 class ScaleX:
-    """
-    Selfwrited class for augmentations for image resize
-    """
+    """Selfwrited class for augmentations for image resize."""
+
     def __init__(
-            self,
-            p_value: float = 0.5,
-            scale_min: float = 0.8,
-            scale_max: float = 1.2
+        self,
+        p_value: float = 0.5,
+        scale_min: float = 0.8,
+        scale_max: float = 1.2
     ):
         self.p_value = p_value
         self.scale_min = scale_min
         self.scale_max = scale_max
 
     def __call__(self, force_apply=False, **kwargs) -> Dict[str, np.ndarray]:
-        """
-        Call function for ScaleX augmentations
+        """Call function for ScaleX augmentations.
+
         :param force_apply: flag to force applying
         :param kwargs: keyword arguments
         :return: dictionary with transformed data
